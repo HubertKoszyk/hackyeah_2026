@@ -7,4 +7,4 @@ class CameraRepository():
         pass
 
     def get_photo(self, url : str) -> np.ndarray:
-        get_image(url)
+        return get_image(url)

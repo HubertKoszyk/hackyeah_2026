@@ -7,6 +7,7 @@ from datetime import datetime
 import time
 import sys
 import os
+import cv2
 
 
 DEFAULT_TEST_URL = "https://www.worldcam.pl/liveview/36999"
@@ -202,7 +203,13 @@ def get_image(url,
         ok = grab_video_frame(driver, output_path)
 
         if ok:
-            return os.path.abspath(output_path)
+            image = cv2.imread(output_path)
+            os.remove(output_path)
+
+            if image is None:
+                print("   failed to read the saved frame")
+                return None
+            return image
 
         print("   failed to save the video frame")
         return None
@@ -224,8 +231,8 @@ def get_image(url,
 
 if __name__ == "__main__":
     result = get_image(DEFAULT_TEST_URL)
-    if result:
-        print(f"OK -> {result}")
+    if result is not None:
+        print(f"OK -> shape {result.shape}")
         sys.exit(0)
     print("FAILED")
     sys.exit(1)

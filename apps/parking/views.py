@@ -92,7 +92,7 @@ def get_slots_data(request, id):
 
 
 def test_image(request):
-    camRepository = CameraRepository()
-    camRepository.get_photo("https://www.worldcam.pl/liveview/36999")
-
-    return HttpResponse("funckja dotarla do konca")
+    photo = CameraRepository().get_photo("https://www.worldcam.pl/liveview/36999")
+    if photo is None:
+        return HttpResponse("nie udalo sie pobrac zdjecia", status=500)
+    return HttpResponse(f"ok, rozmiar zdjecia: {photo.shape}")
