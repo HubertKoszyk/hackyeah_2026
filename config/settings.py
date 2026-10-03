@@ -130,3 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MODEL_PATH = BASE_DIR / "yolov8n.pt"
+MODEL_CONFIDENCE = 0.25
+MODEL_IMAGE_SIZE = 640

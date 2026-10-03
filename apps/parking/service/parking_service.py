@@ -1,6 +1,10 @@
 import numpy as np
+from django.conf import settings
 from ultralytics import YOLO
-from config import MODEL_PATH, MODEL_CONFIDENCE, MODEL_IMAGE_SIZE
+
+MODEL_PATH = str(settings.MODEL_PATH)
+MODEL_CONFIDENCE = settings.MODEL_CONFIDENCE
+MODEL_IMAGE_SIZE = settings.MODEL_IMAGE_SIZE
 
 
 class ParkingService:
@@ -23,9 +27,11 @@ class ParkingService:
                 image_size: Image size used during model inference.
         """
 
+    def __init__(self, path=MODEL_PATH, confidence=MODEL_CONFIDENCE, image_size=MODEL_IMAGE_SIZE) -> None:
         self.path = path
         self.confidence = confidence
         self.image_size = image_size
+        self.model = YOLO(self.path)
 
     def count_vehicles(self, image: np.ndarray) -> int:
         """Count cars detected in an image.
@@ -36,12 +42,13 @@ class ParkingService:
 
         model = YOLO(self.path)
         results = model(image, conf=self.confidence, imgsz=self.image_size)
+        results = self.model(image, conf=self.confidence, imgsz=self.image_size, verbose=False)
 
         car_count = 0
 
         for box in results[0].boxes:
             class_id = int(box.cls[0])
-            class_name = model.names[class_id]
+            class_name = self.model.names[class_id]
 
             if class_name == "car":
                 car_count += 1
