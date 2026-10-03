@@ -29,11 +29,6 @@ const router = createRouter({
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
-    },
-    {
-      path: '/landing',
-      name: 'huj',
-      component: () => import('../views/huj.vue'),
     }
   ],
 })
