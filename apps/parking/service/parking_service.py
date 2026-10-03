@@ -17,8 +17,8 @@ class ParkingService:
                  image_size = MODEL_IMAGE_SIZE
     ) -> None:
         """Initialize the parking service.
-           Args: path:
-                Path to the YOLO model.
+           Args:
+                path: Path to the YOLO model.
                 confidence: Minimum confidence threshold for detections.
                 image_size: Image size used during model inference.
         """
@@ -31,7 +31,7 @@ class ParkingService:
         """Count cars detected in an image.
            Args:
                image: Image represented as a NumPy array.
-            Returns: Number of cars detected in the image.
+               Returns: Number of cars detected in the image.
         """
 
         model = YOLO(self.path)
