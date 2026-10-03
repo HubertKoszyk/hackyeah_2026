@@ -1,0 +1,29 @@
+Index: TODO.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/TODO.md b/TODO.md
+new file mode 100644
+--- /dev/null	(date 1791018554271)
++++ b/TODO.md	(date 1791018554271)
+@@ -0,0 +1,19 @@
++# parking
++## endpoints
++- host/parking/all -> GET protocol get list of all parkings
++- host/parking/ -> GET protocol with parking id parameter return {"total" : 0, "empty" : 0}
++
++## parking data
++- id
++- cammera link
++
++download photo
++get cars
++get spaces
++return 
++
++CammeraRepository
++    - get_photo(link)
++CammeraService
++    - get_spaces
++    - get_cars

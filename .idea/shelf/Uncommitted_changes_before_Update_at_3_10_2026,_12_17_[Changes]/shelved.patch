@@ -1,0 +1,51 @@
+Index: apps/parking/repository/camera_repository.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/apps/parking/repository/camera_repository.py b/apps/parking/repository/camera_repository.py
+new file mode 100644
+--- /dev/null	(date 1791022275219)
++++ b/apps/parking/repository/camera_repository.py	(date 1791022275219)
+@@ -0,0 +1,9 @@
++import numpy as np
++import requests
++
++class CameraRepository():
++    def __init__(self):
++        pass
++
++    def get_photo(self, url : str) -> np.ndarray:
++        pass
+\ No newline at end of file
+Index: apps/parking/service/parking_service.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/apps/parking/service/parking_service.py b/apps/parking/service/parking_service.py
+new file mode 100644
+--- /dev/null	(date 1791022372027)
++++ b/apps/parking/service/parking_service.py	(date 1791022372027)
+@@ -0,0 +1,12 @@
++import numpy as np
++import cv2
++
++class ParkingService:
++    def __init__(self):
++        pass
++
++    def count_vehicles(self, photo : np.ndarray) -> int:
++        pass
++
++    def count_parking_spaces(self, photo : np.ndarray) -> int:
++        pass
+\ No newline at end of file
+diff --git a/apps/parking/test/unit/test_parking_service.py b/apps/parking/test/unit/test_parking_service.py
+new file mode 100644
+diff --git a/apps/parking/test/unit/test_camera_repository.py b/apps/parking/test/unit/test_camera_repository.py
+new file mode 100644
+diff --git a/apps/parking/test/integration/test_camera_repository.py b/apps/parking/test/integration/test_camera_repository.py
+new file mode 100644
+diff --git a/apps/parking/test/integration/test_parking_service.py b/apps/parking/test/integration/test_parking_service.py
+new file mode 100644
