@@ -2,7 +2,6 @@
 export interface TabItem {
   id: string | number
   label: string
-  icon?: string
 }
 
 interface Props {
@@ -27,18 +26,16 @@ const emit = defineEmits<{
       :class="{ 'is-active': modelValue === tab.id }"
       @click="emit('update:modelValue', tab.id)"
     >
-      <!-- Heart Icon matching Figma or custom slot -->
+      <!-- Heart Icon from Figma -->
       <span class="tab-icon">
-        <slot name="icon" :tab="tab">
-          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
-            <path
-              d="M10 16.5C10 16.5 2.5 12 2.5 7.5C2.5 5 4.5 3 7 3C8.5 3 9.5 3.8 10 4.5C10.5 3.8 11.5 3 13 3C15.5 3 17.5 5 17.5 7.5C17.5 12 10 16.5 10 16.5Z"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </slot>
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
+          <path
+            d="M10 16.5C10 16.5 2.5 12 2.5 7.5C2.5 5 4.5 3 7 3C8.5 3 9.5 3.8 10 4.5C10.5 3.8 11.5 3 13 3C15.5 3 17.5 5 17.5 7.5C17.5 12 10 16.5 10 16.5Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linejoin="round"
+          />
+        </svg>
       </span>
       <span class="tab-label">{{ tab.label }}</span>
     </button>
@@ -46,42 +43,45 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
+/* Figma Node: Tab (4:31360) - fill: #f5f5f5, cornerRadius: 8px, padding: 4px, gap: 8px */
 .app-tabs-container {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem;
-  background-color: #e5e8ee;
-  border-radius: 14px;
+  gap: 8px;
+  padding: 4px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
   overflow-x: auto;
   max-width: 100%;
 }
 
+/* Figma Node: .tabitem (4:31322) - cornerRadius: 8px, padding: 8px 12px, gap: 4px */
 .tab-item {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.15rem;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  border-radius: 10px;
+  gap: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
+  border-radius: 8px;
   border: none;
-  background-color: transparent;
-  color: #1a1e24;
+  background-color: #e7e7e7; /* state=default, type=unselected w Figmie */
+  color: #191919;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s ease;
   white-space: nowrap;
 }
 
 .tab-item:hover:not(.is-active) {
-  background-color: rgb(var(--brand-200));
+  background-color: #99b6ff; /* state=hover, type=unselected w Figmie */
+  color: #191919;
 }
 
 .tab-item.is-active {
-  background-color: rgb(var(--brand-500));
+  background-color: #0048ff; /* state=default, type=selected w Figmie */
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 98, 255, 0.3);
 }
 
 .tab-icon {
@@ -90,7 +90,7 @@ const emit = defineEmits<{
 }
 
 .icon-svg {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 16px;
+  height: 16px;
 }
 </style>

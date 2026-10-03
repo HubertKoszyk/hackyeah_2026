@@ -51,13 +51,13 @@ const onChange = () => {
 .app-radio {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-md);
-  color: var(--color-text-main);
+  gap: 8px;
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 20px;
+  color: #191919;
   cursor: pointer;
   user-select: none;
-  transition: all 0.2s ease;
 }
 
 .radio-input {
@@ -68,42 +68,43 @@ const onChange = () => {
   pointer-events: none;
 }
 
+/* Figma: cornerRadius: 9999px (circle), size: 24px */
 .radio-circle {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-color: #e5e8ee;
-  border: 1.5px solid transparent;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background-color: #f5f5f5; /* unchecked default w Figmie */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s ease;
   flex-shrink: 0;
 }
 
 .app-radio:hover:not(.is-disabled) .radio-circle {
-  background-color: rgb(var(--brand-200));
+  background-color: #99b6ff; /* state=hover, clicked=false w Figmie */
 }
 
 .radio-input:checked + .radio-circle {
-  background-color: rgb(var(--brand-500));
-  border-color: rgb(var(--brand-500));
-  box-shadow: 0 2px 8px rgba(0, 98, 255, 0.35);
+  background-color: #0048ff; /* state=default, clicked=true w Figmie */
+}
+
+.app-radio:hover:not(.is-disabled) .radio-input:checked + .radio-circle {
+  background-color: #336dff; /* state=hover, clicked=true w Figmie */
 }
 
 .radio-inner-dot {
   width: 8px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 9999px;
   background-color: #ffffff;
 }
 
-.radio-label {
-  line-height: 1.4;
+.app-radio.is-disabled .radio-circle {
+  background-color: #c7c7c7; /* state=disabled w Figmie */
 }
-
 .app-radio.is-disabled {
-  opacity: 0.45;
+  color: #7b7b7b;
   cursor: not-allowed;
 }
 </style>

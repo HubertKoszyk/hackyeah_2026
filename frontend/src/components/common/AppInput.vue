@@ -53,14 +53,14 @@ const wrapperClasses = computed(() => [
 
 <template>
   <div :class="wrapperClasses">
-    <!-- Field Label Row -->
+    <!-- Label -->
     <div v-if="label" class="label-row">
       <label :for="id" class="field-label">
         <span v-if="required" class="required-star">*</span>
         {{ label }}
       </label>
 
-      <!-- Info Icon (ℹ) from Figma -->
+      <!-- Info Icon (ℹ) -->
       <button
         v-if="hasInfo"
         type="button"
@@ -70,7 +70,7 @@ const wrapperClasses = computed(() => [
       >
         <slot name="infoIcon">
           <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8" />
+            <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.8" />
             <path d="M10 9V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
             <circle cx="10" cy="6.5" r="0.9" fill="currentColor" />
           </svg>
@@ -78,13 +78,13 @@ const wrapperClasses = computed(() => [
       </button>
     </div>
 
-    <!-- Input Container -->
+    <!-- Field Box (Figma Node: Field 4:31168) -->
     <div class="input-control-box">
       <!-- Left Icon -->
       <span v-if="$slots.leftIcon || leftIcon" class="control-icon icon-left">
         <slot name="leftIcon">
           <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8" />
+            <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.8" />
             <path d="M10 9V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
             <circle cx="10" cy="6.5" r="0.9" fill="currentColor" />
           </svg>
@@ -110,7 +110,7 @@ const wrapperClasses = computed(() => [
       >
         <slot name="rightIcon">
           <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
-            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8" />
+            <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.8" />
             <path d="M10 9V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
             <circle cx="10" cy="6.5" r="0.9" fill="currentColor" />
           </svg>
@@ -127,27 +127,27 @@ const wrapperClasses = computed(() => [
 .input-field-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 4px;
   width: 100%;
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-body);
 }
 
-/* Label styling matching Figma */
 .label-row {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 4px;
 }
 
 .field-label {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--color-text-main);
-  user-select: none;
+  font-family: var(--font-family-body);
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #191919; /* Gray 900 w Figmie */
 }
 
 .required-star {
-  color: #ef4444;
+  color: #ec1f00; /* Error 500 w Figmie */
   font-weight: 700;
   margin-right: 2px;
 }
@@ -159,46 +159,43 @@ const wrapperClasses = computed(() => [
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  color: var(--color-text-muted);
-  transition: color 0.2s ease;
-}
-.info-btn:hover {
-  color: #ffffff;
+  color: #191919;
 }
 
-/* Control box matching Figma image */
+/* Field Container: fill: #f5f5f5, cornerRadius: 8px, pad: (12, 8) */
 .input-control-box {
-  position: relative;
   display: flex;
   align-items: center;
-  background-color: #e5e8ee;
-  border: 1.5px solid transparent;
-  border-radius: 12px;
-  padding: 0.55rem 0.85rem;
-  gap: 0.6rem;
-  transition: all 0.2s ease;
+  background-color: #f5f5f5; /* Gray 50 w Figmie */
+  border: 1px solid transparent;
+  border-radius: 8px; /* cornerRadius: 8.0px w Figmie */
+  padding: 8px 12px; /* pad: (12, 8) w Figmie */
+  gap: 8px;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
 }
 
 .input-control-box:focus-within {
   background-color: #ffffff;
-  border-color: var(--color-primary-electric);
-  box-shadow: 0 0 0 3px rgba(26, 98, 255, 0.2);
+  border-color: #0048ff; /* Brand 500 w Figmie */
+  box-shadow: 0 0 0 2px rgba(0, 72, 255, 0.2);
 }
 
 .native-input {
   flex: 1;
   border: none;
   background: transparent;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-md);
-  color: #1a1e24;
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 20px;
+  color: #191919;
   font-weight: 400;
   outline: none;
   min-width: 0;
 }
 
 .native-input::placeholder {
-  color: #838a97;
+  color: #626262; /* Gray 600 w Figmie */
   font-weight: 400;
 }
 
@@ -206,28 +203,26 @@ const wrapperClasses = computed(() => [
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #64748b;
+  color: #191919;
   flex-shrink: 0;
 }
 
 .icon-svg {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 16px;
+  height: 16px;
 }
 
-/* Error state */
 .has-error .input-control-box {
-  border-color: #ef4444;
-  background-color: #fff5f5;
+  border-color: #ec1f00;
+  background-color: #fde9e5;
 }
 .error-text {
-  color: #ef4444;
-  font-weight: 500;
+  color: #ec1f00;
+  font-weight: 400;
 }
 
-/* Disabled state */
 .is-disabled {
-  opacity: 0.55;
+  opacity: 0.5;
   pointer-events: none;
 }
 </style>

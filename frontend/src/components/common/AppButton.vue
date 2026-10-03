@@ -2,8 +2,7 @@
 import { computed } from 'vue'
 
 interface Props {
-  variant?: 'primary' | 'primary-soft' | 'secondary' | 'outline' | 'outline-blue' | 'ghost'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: 'default' | 'outline' | 'transparent'
   disabled?: boolean
   loading?: boolean
   leftIcon?: boolean
@@ -12,12 +11,11 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'primary',
-  size: 'md',
+  variant: 'default',
   disabled: false,
   loading: false,
-  leftIcon: false,
-  rightIcon: false,
+  leftIcon: true,
+  rightIcon: true,
   type: 'button',
 })
 
@@ -28,7 +26,6 @@ const emit = defineEmits<{
 const buttonClasses = computed(() => [
   'app-btn',
   `app-btn--${props.variant}`,
-  `app-btn--${props.size}`,
   {
     'is-disabled': props.disabled || props.loading,
     'is-loading': props.loading,
@@ -44,28 +41,26 @@ const handleClick = (e: MouseEvent) => {
 
 <template>
   <button :type="type" :class="buttonClasses" :disabled="disabled || loading" @click="handleClick">
-    <!-- Left Icon Slot or Default Info Icon -->
-    <span v-if="$slots.leftIcon || leftIcon" class="btn-icon btn-icon-left">
+    <!-- Left Icon -->
+    <span v-if="$slots.leftIcon || leftIcon" class="btn-icon">
       <slot name="leftIcon">
-        <!-- Default Figma-style Info Circle SVG -->
         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
-          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8" />
+          <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.8" />
           <path d="M10 9V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
           <circle cx="10" cy="6.5" r="0.9" fill="currentColor" />
         </svg>
       </slot>
     </span>
 
-    <!-- Label -->
     <span class="btn-label">
       <slot>Button</slot>
     </span>
 
-    <!-- Right Icon Slot or Default Info Icon -->
-    <span v-if="$slots.rightIcon || rightIcon" class="btn-icon btn-icon-right">
+    <!-- Right Icon -->
+    <span v-if="$slots.rightIcon || rightIcon" class="btn-icon">
       <slot name="rightIcon">
         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-svg">
-          <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8" />
+          <circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.8" />
           <path d="M10 9V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
           <circle cx="10" cy="6.5" r="0.9" fill="currentColor" />
         </svg>
@@ -79,129 +74,88 @@ const handleClick = (e: MouseEvent) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  font-family: var(--font-family-primary);
-  font-weight: 500;
-  border-radius: 12px;
+  gap: 8px; /* itemSpacing: 8px w Figmie */
+  padding: 8px 12px; /* pad=(12, 8) w Figmie */
+  border-radius: 8px; /* cornerRadius: 8.0px w Figmie */
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 400;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   outline: none;
   user-select: none;
-  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
 }
 
-/* ==========================================================================
-   Sizes
-   ========================================================================== */
-.app-btn--sm {
-  padding: 0.4rem 0.85rem;
-  font-size: var(--font-size-sm);
-  border-radius: 8px;
-}
-
-.app-btn--md {
-  padding: 0.65rem 1.25rem;
-  font-size: var(--font-size-md);
-  border-radius: 12px;
-}
-
-.app-btn--lg {
-  padding: 0.85rem 1.6rem;
-  font-size: var(--font-size-lg);
-  border-radius: 14px;
-}
-
-/* ==========================================================================
-   Variants matching Figma
-   ========================================================================== */
-
-/* 1. Primary Solid Blue */
-.app-btn--primary {
-  background-color: var(--color-primary-electric);
+/* 1. Type: Default (Solid) */
+.app-btn--default {
+  background-color: #0048ff;
+  border: 1px solid #003acc;
   color: #ffffff;
-  border-color: var(--color-primary-electric);
-  box-shadow: 0 4px 14px rgba(26, 98, 255, 0.3);
 }
-.app-btn--primary:hover:not(.is-disabled) {
-  background-color: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
-  box-shadow: 0 6px 18px rgba(26, 98, 255, 0.4);
-  transform: translateY(-1px);
+.app-btn--default:hover:not(.is-disabled) {
+  background-color: #336dff;
+  border-color: #0048ff;
 }
-.app-btn--primary:active:not(.is-disabled) {
-  background-color: var(--color-primary-active);
-  transform: translateY(0);
+.app-btn--default:active:not(.is-disabled) {
+  background-color: #6691ff;
+  border-color: #336dff;
 }
-
-/* 2. Soft Blue */
-.app-btn--primary-soft {
-  background-color: #4b84ff;
-  color: #ffffff;
-  border-color: #4b84ff;
-}
-.app-btn--primary-soft:hover:not(.is-disabled) {
-  background-color: #6395ff;
+.app-btn--default.is-disabled {
+  background-color: #c7c7c7;
+  border-color: #959595;
+  color: #626262;
+  cursor: not-allowed;
 }
 
-/* 3. Secondary Dark Surface */
-.app-btn--secondary {
-  background-color: #272a32;
-  color: #ffffff;
-  border-color: #383d47;
-}
-.app-btn--secondary:hover:not(.is-disabled) {
-  background-color: #333742;
-  border-color: #484e5b;
-}
-
-/* 4. Outline Subtle */
+/* 2. Type: Outline */
 .app-btn--outline {
   background-color: transparent;
+  border: 1px solid #003acc;
   color: #ffffff;
-  border-color: #3f4552;
 }
 .app-btn--outline:hover:not(.is-disabled) {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: #636b7c;
+  border-color: #0048ff;
 }
-
-/* 5. Outline Blue */
-.app-btn--outline-blue {
-  background-color: rgba(26, 98, 255, 0.08);
+.app-btn--outline:active:not(.is-disabled) {
+  background-color: #6691ff;
+  border-color: #336dff;
   color: #ffffff;
-  border-color: var(--color-primary-electric);
 }
-.app-btn--outline-blue:hover:not(.is-disabled) {
-  background-color: rgba(26, 98, 255, 0.18);
-  border-color: var(--color-primary-hover);
-}
-
-/* 6. Ghost */
-.app-btn--ghost {
-  background-color: transparent;
-  color: var(--color-text-muted);
-}
-.app-btn--ghost:hover:not(.is-disabled) {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.06);
-}
-
-/* Disabled state */
-.app-btn.is-disabled {
-  opacity: 0.45;
+.app-btn--outline.is-disabled {
+  border-color: #959595;
+  color: #959595;
   cursor: not-allowed;
-  pointer-events: none;
 }
 
-/* Icon styling */
+/* 3. Type: Transparent (Ghost) */
+.app-btn--transparent {
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: #ffffff;
+}
+.app-btn--transparent:hover:not(.is-disabled) {
+  border-color: #0048ff;
+}
+.app-btn--transparent:active:not(.is-disabled) {
+  background-color: #6691ff;
+  border-color: #336dff;
+  color: #ffffff;
+}
+.app-btn--transparent.is-disabled {
+  color: #959595;
+  cursor: not-allowed;
+}
+
 .btn-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 .icon-svg {
-  width: 1.15em;
-  height: 1.15em;
+  width: 16px;
+  height: 16px;
 }
 </style>

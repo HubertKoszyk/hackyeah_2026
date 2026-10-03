@@ -1,88 +1,96 @@
 /* ==========================================================================
-   Design System - Official Color Tokens from Figma
-   Format: RGB components (np. rgb(var(--brand-500)) lub rgb(var(--brand-500) / 50%))
+   Design System - 100% Exact Figma Tokens (Extracted directly via Figma API)
+   Project: smart city projekt
+   Node: Colors (4:32)
    ========================================================================== */
 
 :root {
   /* ==========================================================================
-     BRAND (Niebieski / Cobalt Blue - zgodnie z Figmą, NIE fiolet!)
+     BRAND (Figma Node: Brand 4:33)
      ========================================================================== */
-  --brand-900: 5, 16, 42;      /* Najciemniejszy granat */
-  --brand-800: 8, 33, 84;
-  --brand-700: 11, 53, 132;
-  --brand-600: 14, 74, 184;
-  --brand-500: 0, 98, 255;     /* Główny, elektryczny błękit Brand 500 (#0062FF) */
-  --brand-400: 51, 133, 255;
-  --brand-300: 102, 163, 255;
-  --brand-200: 153, 194, 255;
-  --brand-100: 204, 224, 255;
-  --brand-50: 238, 245, 255;   /* Najjaśniejszy, lodowy błękit */
+  --brand-900: 0, 14, 51;      /* #000e33 */
+  --brand-800: 0, 29, 102;     /* #001d66 */
+  --brand-700: 0, 43, 153;     /* #002b99 */
+  --brand-600: 0, 58, 204;     /* #003acc (Border dla Brand 500) */
+  --brand-500: 0, 72, 255;     /* #0048ff (Główny Brand 500 w Figmie) */
+  --brand-400: 51, 109, 255;   /* #336dff (Hover state) */
+  --brand-300: 102, 145, 255;  /* #6691ff (Clicked / active state) */
+  --brand-200: 153, 182, 255;  /* #99b6ff (Soft / hover unselected) */
+  --brand-50: 230, 237, 255;   /* #e6edff (Najjaśniejszy tint) */
 
   /* ==========================================================================
-     ERROR (Czerwień) - 10 odcieni z Figmy
+     ERROR (Figma Node: Error 4:48)
      ========================================================================== */
-  --error-900: 45, 5, 5;
-  --error-800: 80, 10, 10;
-  --error-700: 125, 15, 15;
-  --error-600: 175, 20, 20;
-  --error-500: 235, 30, 15;    /* Czysta, jaskrawa czerwień */
-  --error-400: 245, 75, 60;
-  --error-300: 250, 120, 110;
-  --error-200: 252, 165, 160;
-  --error-100: 254, 210, 205;
-  --error-50: 255, 240, 240;
+  --error-900: 47, 6, 0;       /* #2f0600 */
+  --error-800: 94, 12, 0;      /* #5e0c00 */
+  --error-700: 142, 19, 0;     /* #8e1300 */
+  --error-600: 189, 25, 0;     /* #bd1900 */
+  --error-500: 236, 31, 0;     /* #ec1f00 */
+  --error-400: 240, 76, 51;    /* #f04c33 */
+  --error-300: 244, 121, 102;  /* #f47966 */
+  --error-200: 247, 165, 153;  /* #f7a599 */
+  --error-50: 253, 233, 229;   /* #fde9e5 */
 
   /* ==========================================================================
-     WARNING (Bursztyn / Złoty / Pomarańcz) - 10 odcieni z Figmy
+     WARNING (Figma Node: Warning 4:63)
      ========================================================================== */
-  --warning-900: 50, 30, 0;
-  --warning-800: 90, 50, 0;
-  --warning-700: 140, 80, 0;
-  --warning-600: 195, 115, 0;
-  --warning-500: 245, 150, 0;  /* Żywy bursztyn / amber */
-  --warning-400: 250, 175, 45;
-  --warning-300: 252, 195, 95;
-  --warning-200: 254, 215, 145;
-  --warning-100: 255, 235, 195;
-  --warning-50: 255, 250, 240;
+  --warning-900: 48, 31, 0;    /* #301f00 */
+  --warning-800: 97, 61, 0;    /* #613d00 */
+  --warning-700: 145, 92, 0;   /* #915c00 */
+  --warning-600: 194, 123, 1;  /* #c27b01 */
+  --warning-500: 242, 154, 1;  /* #f29a01 */
+  --warning-400: 245, 174, 52; /* #f5ae34 */
+  --warning-300: 247, 194, 102;/* #f7c266 */
+  --warning-200: 250, 214, 153;/* #fad699 */
+  --warning-50: 254, 245, 230; /* #fef5e6 */
 
   /* ==========================================================================
-     SUCCESS (Zieleń) - 10 odcieni z Figmy
+     SUCCESS (Figma Node: Success 4:78)
      ========================================================================== */
-  --success-900: 10, 45, 5;
-  --success-800: 15, 80, 10;
-  --success-700: 25, 125, 15;
-  --success-600: 30, 170, 20;
-  --success-500: 35, 215, 25;  /* Świeża, jaskrawa zieleń */
-  --success-400: 75, 225, 70;
-  --success-300: 125, 235, 120;
-  --success-200: 175, 245, 170;
-  --success-100: 215, 250, 215;
-  --success-50: 240, 255, 240;
+  --success-900: 11, 44, 0;    /* #0b2c00 */
+  --success-800: 22, 88, 0;    /* #165800 */
+  --success-700: 33, 132, 0;   /* #218400 */
+  --success-600: 44, 177, 0;   /* #2cb100 */
+  --success-500: 55, 221, 0;   /* #37dd00 */
+  --success-400: 95, 228, 51;  /* #5fe433 */
+  --success-300: 135, 234, 102;/* #87ea66 */
+  --success-200: 175, 241, 153;/* #aff199 */
+  --success-50: 235, 252, 229; /* #ebfce5 */
 
   /* ==========================================================================
-     GRAY (Skala szarości) - 10 odcieni z Figmy
+     GRAY (Figma Node: Gray 4:93)
      ========================================================================== */
-  --gray-900: 25, 25, 25;
-  --gray-800: 45, 45, 45;
-  --gray-700: 70, 70, 70;
-  --gray-600: 95, 95, 95;
-  --gray-500: 128, 128, 128;
-  --gray-400: 155, 155, 155;
-  --gray-300: 185, 185, 185;
-  --gray-200: 215, 215, 215;
-  --gray-100: 235, 235, 235;
-  --gray-50: 248, 248, 248;
+  --gray-900: 25, 25, 25;      /* #191919 (Teksty główne / ikony) */
+  --gray-800: 49, 49, 49;      /* #313131 */
+  --gray-700: 74, 74, 74;      /* #4a4a4a (Tło całego canvasu w Figmie) */
+  --gray-600: 98, 98, 98;      /* #626262 (Placeholdery) */
+  --gray-500: 123, 123, 123;   /* #7b7b7b */
+  --gray-400: 149, 149, 149;   /* #959595 (Obramowania disabled) */
+  --gray-300: 199, 199, 199;   /* #c7c7c7 (Wypełnienia disabled) */
+  --gray-200: 231, 231, 231;   /* #e7e7e7 (Tło .tabitem unselected) */
+  --gray-50: 245, 245, 245;    /* #f5f5f5 (Tło toru Tab / tło pól Field) */
 
-  /* ==========================================================================
-     OTHER
-     ========================================================================== */
-  --other-dark: 25, 25, 28;
+  /* Other */
+  --other-dark: 25, 25, 25;
+  --white: 255, 255, 255;
 
-  /* Helper Direct Color Mappings */
-  --color-brand: rgb(var(--brand-500));
-  --color-brand-hover: rgb(var(--brand-600));
-  --color-brand-active: rgb(var(--brand-700));
-  --color-brand-soft: rgb(var(--brand-200));
-  --color-brand-bg: rgb(var(--brand-50));
+  /* Global Component Shortcuts */
+  --color-primary: rgb(var(--brand-500));
+  --color-primary-hover: rgb(var(--brand-400));
+  --color-primary-clicked: rgb(var(--brand-300));
+  --color-primary-border: rgb(var(--brand-600));
+
+  --color-field-bg: rgb(var(--gray-50));
+  --color-tab-track: rgb(var(--gray-50));
+  --color-tab-pill-unselected: rgb(var(--gray-200));
+  --color-tab-pill-hover: rgb(var(--brand-200));
+
+  --color-text-dark: rgb(var(--gray-900));
+  --color-text-placeholder: rgb(var(--gray-600));
+  --color-border-disabled: rgb(var(--gray-400));
+  --color-bg-disabled: rgb(var(--gray-300));
+
+  /* Component Corner Radius from Figma */
+  --radius-component: 8px; /* W Figmie: Button, Field, Input, Checkbox, Tab mają cornerRadius: 8.0px */
+  --radius-full: 9999px;   /* Radio button */
 }

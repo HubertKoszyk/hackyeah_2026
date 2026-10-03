@@ -61,13 +61,13 @@ const onChange = (event: Event) => {
 .app-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-md);
-  color: var(--color-text-main);
+  gap: 8px;
+  font-family: var(--font-family-body);
+  font-size: 16px;
+  line-height: 20px;
+  color: #191919;
   cursor: pointer;
   user-select: none;
-  transition: all 0.2s ease;
 }
 
 .checkbox-input {
@@ -78,32 +78,29 @@ const onChange = (event: Event) => {
   pointer-events: none;
 }
 
+/* Figma: cornerRadius: 8px, size: 24px */
 .checkbox-box {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background-color: #e5e8ee;
-  border: 1.5px solid transparent;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px; /* cornerRadius: 8.0px w Figmie */
+  background-color: #f5f5f5; /* unchecked default w Figmie */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s ease;
   flex-shrink: 0;
 }
 
 .app-checkbox:hover:not(.is-disabled) .checkbox-box {
-  background-color: rgb(var(--brand-200));
+  background-color: #99b6ff; /* state=hover, checked=false w Figmie */
 }
 
 .checkbox-input:checked + .checkbox-box {
-  background-color: rgb(var(--brand-500));
-  border-color: rgb(var(--brand-500));
-  box-shadow: 0 2px 8px rgba(0, 98, 255, 0.35);
+  background-color: #0048ff; /* state=default, checked=true w Figmie */
 }
 
-.checkbox-input:focus-visible + .checkbox-box {
-  outline: 2px solid rgb(var(--brand-400));
-  outline-offset: 2px;
+.app-checkbox:hover:not(.is-disabled) .checkbox-input:checked + .checkbox-box {
+  background-color: #336dff; /* state=hover, checked=true w Figmie */
 }
 
 .check-icon {
@@ -111,12 +108,11 @@ const onChange = (event: Event) => {
   height: 14px;
 }
 
-.checkbox-label {
-  line-height: 1.4;
+.app-checkbox.is-disabled .checkbox-box {
+  background-color: #c7c7c7; /* state=disabled w Figmie */
 }
-
 .app-checkbox.is-disabled {
-  opacity: 0.45;
+  color: #7b7b7b;
   cursor: not-allowed;
 }
 </style>

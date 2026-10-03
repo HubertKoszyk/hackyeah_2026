@@ -120,25 +120,25 @@ onMounted(async () => {
       </div>
 
       <div class="buttons-matrix-container">
-        <!-- Row 1: Primary Variants -->
+        <!-- Row 1: Default Solid -->
         <div class="buttons-row">
-          <AppButton variant="primary" left-icon right-icon>Button</AppButton>
-          <AppButton variant="primary-soft" left-icon right-icon>Button</AppButton>
-          <AppButton variant="primary-soft" left-icon right-icon>Button</AppButton>
+          <AppButton variant="default">Button</AppButton>
+          <AppButton variant="default" :left-icon="true" :right-icon="false">Button</AppButton>
+          <AppButton variant="default" disabled>Button</AppButton>
         </div>
 
-        <!-- Row 2: Secondary / Dark Variants -->
+        <!-- Row 2: Outline -->
         <div class="buttons-row">
-          <AppButton variant="secondary" left-icon right-icon>Button</AppButton>
-          <AppButton variant="secondary" left-icon right-icon>Button</AppButton>
-          <AppButton variant="primary-soft" left-icon right-icon>Button</AppButton>
+          <AppButton variant="outline">Button</AppButton>
+          <AppButton variant="outline" :left-icon="true" :right-icon="false">Button</AppButton>
+          <AppButton variant="outline" disabled>Button</AppButton>
         </div>
 
-        <!-- Row 3: Outline & Special Variants -->
+        <!-- Row 3: Transparent / Ghost -->
         <div class="buttons-row">
-          <AppButton variant="outline" left-icon right-icon>Button</AppButton>
-          <AppButton variant="outline-blue" left-icon right-icon>Button</AppButton>
-          <AppButton variant="primary-soft" left-icon right-icon>Button</AppButton>
+          <AppButton variant="transparent">Button</AppButton>
+          <AppButton variant="transparent" :left-icon="true" :right-icon="false">Button</AppButton>
+          <AppButton variant="transparent" disabled>Button</AppButton>
         </div>
       </div>
     </section>

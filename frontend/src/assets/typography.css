@@ -1,141 +1,112 @@
 /* ==========================================================================
-   Design System & Typography - Smart City Platform
-   Font: Plus Jakarta Sans (Google Fonts)
+   Design System - Typography extracted from Figma API (Node 4:11)
+   Headings: Plus Jakarta Sans (Weight 700)
+   Body / UI: Inclusive Sans (Weight 400)
    ========================================================================== */
 
 :root {
-  /* Font Family */
-  --font-family-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Font Families from Figma */
+  --font-family-headings: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-body: 'Inclusive Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-primary: var(--font-family-body);
 
-  /* Typography Scale from Figma */
-  --font-size-h1: 2.25rem;   /* 36px */
-  --font-size-h2: 1.75rem;   /* 28px */
-  --font-size-h3: 1.375rem;  /* 22px */
-  --font-size-lg: 1.125rem;  /* 18px */
-  --font-size-md: 0.9375rem; /* 15px */
-  --font-size-sm: 0.8125rem; /* 13px */
-  --font-size-xs: 0.6875rem; /* 11px */
+  /* Exact Font Sizes & Line Heights from Figma */
+  --font-size-h1: 32px;
+  --line-height-h1: 40px;
 
-  /* Line Heights */
-  --line-height-tight: 1.2;
-  --line-height-heading: 1.25;
-  --line-height-normal: 1.5;
+  --font-size-h2: 28px;
+  --line-height-h2: 32px;
+
+  --font-size-h3: 20px;
+  --line-height-h3: 24px;
+
+  --font-size-lg: 20px;
+  --line-height-lg: 24px;
+
+  --font-size-md: 16px;
+  --line-height-md: 20px;
+
+  --font-size-sm: 14px;
+  --line-height-sm: 16px;
+
+  --font-size-xs: 12px;
+  --line-height-xs: 12px;
 
   /* Font Weights */
   --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-
-  /* Figma Palette - Electric Blue & Modern Dark Surface */
-  --color-primary-electric: #1a62ff;
-  --color-primary-hover: #3375ff;
-  --color-primary-active: #0f4ecc;
-  --color-primary-soft: #5b8df7;
-  --color-primary-muted: rgba(26, 98, 255, 0.15);
-
-  --color-dark-bg: #14161a;
-  --color-dark-card: #1f2228;
-  --color-dark-surface: #272b33;
-  --color-dark-border: #363b46;
-
-  --color-text-main: #ffffff;
-  --color-text-muted: #9ba3af;
-  --color-text-dark: #121417;
-
-  /* Status Colors */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-
-  /* Radii */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-full: 9999px;
 }
 
 /* Base Body Application */
 html, body {
-  font-family: var(--font-family-primary);
-  color: var(--color-text-main);
-  background-color: var(--color-dark-bg);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+  color: #ffffff;
+  background-color: rgb(var(--gray-700)); /* #4a4a4a z Figmy */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==========================================================================
-   Typography Classes (Directly matching Figma spec)
+   Headings (Plus Jakarta Sans, Weight 700)
    ========================================================================== */
 
-/* H1 - Najlepsza aplikacja smart city winner */
 h1, .text-h1 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
-/* H2 - Najlepsza aplikacja smart city winner */
 h2, .text-h2 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-heading);
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
 }
 
-/* H3 - Najlepsza aplikacja smart city winner */
 h3, .text-h3 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-headings);
   font-size: var(--font-size-h3);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-heading);
-  letter-spacing: -0.01em;
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0;
 }
 
-/* Lg - Najlepsza aplikacja smart city winner */
+/* ==========================================================================
+   Body & UI text (Inclusive Sans, Weight 400)
+   ========================================================================== */
+
 .text-lg {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-body);
   font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-normal);
 }
 
-/* Md - Najlepsza aplikacja smart city winner */
 .text-md, p {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-body);
   font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-normal);
 }
 
-/* Sm - Najlepsza aplikacja smart city winner */
 .text-sm {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-body);
   font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
   font-weight: var(--font-weight-regular);
-  line-height: 1.4;
 }
 
-/* Xs - Najlepsza aplikacja smart city winner */
 .text-xs {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-body);
   font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
   font-weight: var(--font-weight-regular);
-  line-height: 1.35;
 }
 
-/* Font Weight Utilities */
 .font-regular { font-weight: var(--font-weight-regular); }
-.font-medium { font-weight: var(--font-weight-medium); }
-.font-semibold { font-weight: var(--font-weight-semibold); }
 .font-bold { font-weight: var(--font-weight-bold); }
-.font-extrabold { font-weight: var(--font-weight-extrabold); }
-
-/* Color utilities */
-.text-white { color: #ffffff; }
-.text-muted { color: var(--color-text-muted); }
-.text-primary { color: var(--color-primary-electric); }
