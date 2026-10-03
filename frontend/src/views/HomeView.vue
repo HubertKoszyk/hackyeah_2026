@@ -357,6 +357,11 @@ onMounted(async () => {
         Nie udało się połączyć z backendem Django ({{ errorMessage }}). Upewnij się, że serwer działa na porcie 8001.
       </div>
     </section>
+    <div>
+    <h3>
+      <a href='/landing'>Tu tak dziala?</a>
+    </h3>
+    </div>
   </main>
 </template>
 
