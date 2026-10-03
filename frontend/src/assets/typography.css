@@ -1,0 +1,141 @@
+/* ==========================================================================
+   Design System & Typography - Smart City Platform
+   Font: Plus Jakarta Sans (Google Fonts)
+   ========================================================================== */
+
+:root {
+  /* Font Family */
+  --font-family-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Typography Scale from Figma */
+  --font-size-h1: 2.25rem;   /* 36px */
+  --font-size-h2: 1.75rem;   /* 28px */
+  --font-size-h3: 1.375rem;  /* 22px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-md: 0.9375rem; /* 15px */
+  --font-size-sm: 0.8125rem; /* 13px */
+  --font-size-xs: 0.6875rem; /* 11px */
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-heading: 1.25;
+  --line-height-normal: 1.5;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Figma Palette - Electric Blue & Modern Dark Surface */
+  --color-primary-electric: #1a62ff;
+  --color-primary-hover: #3375ff;
+  --color-primary-active: #0f4ecc;
+  --color-primary-soft: #5b8df7;
+  --color-primary-muted: rgba(26, 98, 255, 0.15);
+
+  --color-dark-bg: #14161a;
+  --color-dark-card: #1f2228;
+  --color-dark-surface: #272b33;
+  --color-dark-border: #363b46;
+
+  --color-text-main: #ffffff;
+  --color-text-muted: #9ba3af;
+  --color-text-dark: #121417;
+
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+}
+
+/* Base Body Application */
+html, body {
+  font-family: var(--font-family-primary);
+  color: var(--color-text-main);
+  background-color: var(--color-dark-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   Typography Classes (Directly matching Figma spec)
+   ========================================================================== */
+
+/* H1 - Najlepsza aplikacja smart city winner */
+h1, .text-h1 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+}
+
+/* H2 - Najlepsza aplikacja smart city winner */
+h2, .text-h2 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-heading);
+  letter-spacing: -0.015em;
+}
+
+/* H3 - Najlepsza aplikacja smart city winner */
+h3, .text-h3 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-heading);
+  letter-spacing: -0.01em;
+}
+
+/* Lg - Najlepsza aplikacja smart city winner */
+.text-lg {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+}
+
+/* Md - Najlepsza aplikacja smart city winner */
+.text-md, p {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+}
+
+/* Sm - Najlepsza aplikacja smart city winner */
+.text-sm {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.4;
+}
+
+/* Xs - Najlepsza aplikacja smart city winner */
+.text-xs {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.35;
+}
+
+/* Font Weight Utilities */
+.font-regular { font-weight: var(--font-weight-regular); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+.font-extrabold { font-weight: var(--font-weight-extrabold); }
+
+/* Color utilities */
+.text-white { color: #ffffff; }
+.text-muted { color: var(--color-text-muted); }
+.text-primary { color: var(--color-primary-electric); }
