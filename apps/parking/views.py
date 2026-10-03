@@ -7,9 +7,9 @@ from .repository.camera_repository import CameraRepository
 from .models import Parking
 
 
-def get_occupancy_percent(taken_slots, max_slots):
-    empty_slots = max_slots - taken_slots
-    occupancy_percent = (max_slots / taken_slots) * 100
+def get_occupancy_percent(empty_slots, max_slots):
+    taken_slots = max_slots - empty_slots
+    occupancy_percent = (taken_slots / max_slots) * 100
 
     return occupancy_percent
 
@@ -42,7 +42,10 @@ def serialize_parking(parking):
         cameras[name] = camera.url
         camera_num += 1
 
-    occupancy_percent = get_occupancy_percent(50, 100)
+    max_slots = parking.max_slots
+    empty_slots = parking.empty_slots
+
+    occupancy_percent = get_occupancy_percent(empty_slots, max_slots)
     parking_status = get_parking_status(occupancy_percent)
 
     return {
@@ -53,8 +56,8 @@ def serialize_parking(parking):
         "cameras": cameras,
         "lat": 52.2319,
         "lng": 21.0067,
-        "totalSpots": 100,
-        "freeSpots": 35,
+        "totalSpots": max_slots,
+        "freeSpots": empty_slots,
         'occupancy_percent': occupancy_percent,
         "status": parking_status,
     }
@@ -80,12 +83,14 @@ def get_parkings_by_id(request, id):
 @require_GET
 def get_slots_data(request, id):
     parking = get_object_or_404(Parking.objects.prefetch_related("cameras"), id=id)
+    max_slots = parking.max_slots
+    empty_slots = parking.empty_slots
     occupancy_percent = get_occupancy_percent(1, 100)
     parking_status = get_parking_status(occupancy_percent)
 
     return {
-        "totalSpots": 100,
-        "freeSpots": 35,
+        "totalSpots": max_slots,
+        "freeSpots": empty_slots,
         "occupancyPercent": occupancy_percent,
         "status": parking_status,
     }

@@ -7,9 +7,4 @@ class CameraRepository():
         pass
 
     def get_photo(self, url : str) -> np.ndarray:
-<<<<<<< Updated upstream
         return get_image(url)
-=======
-        get_image(url)
-
->>>>>>> Stashed changes
