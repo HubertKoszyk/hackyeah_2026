@@ -30,6 +30,11 @@ const router = createRouter({
       name: 'about',
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/landing',
+      name: 'huj',
+      component: () => import('../views/huj.vue'),
+    }
   ],
 })
 
