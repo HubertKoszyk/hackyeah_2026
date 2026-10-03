@@ -1,6 +1,7 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_GET
+from .repository.camera_repository import CameraRepository
 
 
 from .models import Parking
@@ -88,3 +89,10 @@ def get_slots_data(request, id):
         "occupancyPercent": occupancy_percent,
         "status": parking_status,
     }
+
+
+def test_image(request):
+    camRepository = CameraRepository()
+    camRepository.get_photo("https://www.worldcam.pl/liveview/36999")
+
+    return HttpResponse("funckja dotarla do konca")
