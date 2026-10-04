@@ -1,10 +1,17 @@
 import numpy as np
-from django.conf import settings
 from ultralytics import YOLO
 
-MODEL_PATH = str(settings.MODEL_PATH)
-MODEL_CONFIDENCE = settings.MODEL_CONFIDENCE
-MODEL_IMAGE_SIZE = settings.MODEL_IMAGE_SIZE
+try:
+    from django.conf import settings
+
+    MODEL_PATH = str(settings.MODEL_PATH)
+    MODEL_CONFIDENCE = settings.MODEL_CONFIDENCE
+    MODEL_IMAGE_SIZE = settings.MODEL_IMAGE_SIZE
+
+except:
+    MODEL_PATH = "yolov8m.pt"
+    MODEL_CONFIDENCE = 0.25
+    MODEL_IMAGE_SIZE = 640
 
 
 class ParkingService:
