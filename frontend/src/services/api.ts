@@ -43,3 +43,29 @@ export const fetchRoadworks = async (): Promise<RoadRestriction[]> => {
   })
   return response.data
 }
+
+export interface CreateRoadworkPayload {
+  title: string
+  kind: RoadRestriction['kind']
+  organization: string
+  description: string
+  detour: string
+  start_lat: number
+  start_lng: number
+  end_lat: number
+  end_lng: number
+  start_at: string
+  end_at: string
+}
+
+export const createRoadwork = async (payload: CreateRoadworkPayload): Promise<RoadRestriction> => {
+  try {
+    const response = await api.post<RoadRestriction>('/roadworks/create/', payload)
+    return response.data
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.data?.errors) {
+      throw new Error(Object.values(e.response.data.errors).join('; '))
+    }
+    throw new Error('Nie udało się zapisać blokady (brak połączenia z API?)')
+  }
+}
