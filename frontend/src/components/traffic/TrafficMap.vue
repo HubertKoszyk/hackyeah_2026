@@ -17,6 +17,8 @@ import {
   fetchLiveFlowSegment,
   type TomTomSegmentData,
 } from '../../services/tomtomService'
+import { fetchRoadworks, type RoadRestriction } from '../../services/api'
+import { getStreetImpact, applyImpact } from '../../services/roadworksImpact'
 
 // State
 const mapContainer = ref<HTMLElement | null>(null)
@@ -28,6 +30,39 @@ const showApiKeyModal = ref(false)
 const inputApiKey = ref(apiKey.value)
 const isLiveTomTomFlowActive = ref(true)
 const isLiveTomTomIncidentsActive = ref(true)
+
+// Roadworks State
+const roadworks = ref<RoadRestriction[]>([])
+const showRoadworks = ref(true)
+const roadworksAffectTraffic = ref(true)
+const roadworksError = ref('')
+let roadworksLayer: L.LayerGroup | null = null
+let roadworksTimer: number | undefined
+
+const KIND_COLORS: Record<string, string> = {
+  roadwork: '#f59e0b',
+  event: '#3b82f6',
+  accident: '#ef4444',
+  closure: '#7c3aed',
+}
+const KIND_ICONS: Record<string, string> = {
+  roadwork: '🚧',
+  event: '🎫',
+  accident: '⚠️',
+  closure: '⛔',
+}
+const STATUS_LABELS: Record<string, string> = {
+  active: 'Trwa',
+  planned: 'Planowane',
+  finished: 'Zakończone',
+}
+
+const esc = (v: string) =>
+  v.replace(/[&<>"']/g, (c) => (({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }) as Record<string, string>)[c] ?? c)
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })
+
+const activeRoadworksCount = () => roadworks.value.filter((r) => r.status === 'active').length
 
 // Simulation / Time State
 const currentHour = ref(17) // 17:00 domyślnie (szczyt popołudniowy)
@@ -41,6 +76,7 @@ const activeStreetInfo = ref<{
   speedKmH: number
   delayMinutes: number
   isLive?: boolean
+  causes?: string[]
 } | null>(null)
 
 // Layers
@@ -176,12 +212,18 @@ const renderStreets = () => {
     : krakowStreets.filter((s) => s.district === selectedDistrict.value)
 
   filtered.forEach((street) => {
-    const congestion = getStreetCongestionForHour(street, currentHour.value)
+    const baseCongestion = getStreetCongestionForHour(street, currentHour.value)
+    const impact = roadworksAffectTraffic.value
+      ? getStreetImpact(street, roadworks.value)
+      : { extraPercent: 0, closed: false, causes: [] as RoadRestriction[] }
+    const congestion = applyImpact(baseCongestion, impact, street.speedLimit, street.lengthKm)
+    const causeTitles = impact.causes.map((c) => c.title)
 
     const polyline = L.polyline(street.coordinates, {
       color: congestion.color,
       weight: 7,
       opacity: 0.88,
+      dashArray: impact.closed ? '2 10' : undefined,
       lineCap: 'round',
       lineJoin: 'round',
     }).addTo(map!)
@@ -195,6 +237,7 @@ const renderStreets = () => {
         speedKmH: congestion.speedKmH,
         delayMinutes: congestion.delayMinutes,
         isLive: false,
+        causes: causeTitles,
       }
     })
 
@@ -210,12 +253,95 @@ const renderStreets = () => {
           <div>Opóźnienie: <b>+${congestion.delayMinutes} min</b></div>
           <div>Długość arterii: <b>${street.lengthKm} km</b></div>
           <div style="font-size: 11px; color: #7b7b7b; margin-top: 4px;">Godzina analizy: <b>${currentHour.value}:00</b></div>
+          ${
+            causeTitles.length
+              ? `<div style="margin-top: 4px; padding: 6px 8px; background: #f5f3ff; border-radius: 6px; font-size: 12px; color: #5b21b6;">
+                  <b>${impact.closed ? '⛔ Droga zamknięta' : '🚧 Wpływ ograniczeń'}</b> (+${impact.extraPercent} p.p.)<br/>
+                  ${causeTitles.map(esc).join('<br/>')}
+                </div>`
+              : ''
+          }
         </div>
       </div>
     `)
 
     streetLayers.push({ streetId: street.id, polyline })
   })
+}
+
+const roadworkPopupHtml = (r: RoadRestriction) => {
+  const detour = r.detour ? `<div><b>Objazd:</b> ${esc(r.detour)}</div>` : ''
+  const org = r.organization ? `<div>${esc(r.organization)}</div>` : ''
+  const note =
+    r.status === 'active'
+      ? '<div style="margin-top:4px;color:#5b21b6;">Wpływa na natężenie ruchu na pobliskich ulicach</div>'
+      : '<div style="margin-top:4px;color:#7b7b7b;">Jeszcze nie wpływa na ruch (planowane)</div>'
+  return `
+    <div style="font-family: 'Plus Jakarta Sans', sans-serif; padding: 4px; min-width: 210px; font-size: 13px; color:#4a4a4a;">
+      <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: ${KIND_COLORS[r.kind] ?? '#555'};">
+        ${KIND_ICONS[r.kind] ?? ''} ${esc(r.kind_label)} · ${STATUS_LABELS[r.status] ?? r.status}
+      </div>
+      <h4 style="margin: 2px 0 6px 0; font-size: 15px; font-weight: 700; color: #191919;">${esc(r.title)}</h4>
+      ${org}
+      <div>${fmtDate(r.start_at)} – ${fmtDate(r.end_at)}</div>
+      ${r.description ? `<div>${esc(r.description)}</div>` : ''}
+      ${detour}
+      ${note}
+    </div>`
+}
+
+const renderRoadworks = () => {
+  if (!map) return
+  roadworksLayer?.clearLayers()
+  if (!roadworksLayer) roadworksLayer = L.layerGroup()
+
+  if (!showRoadworks.value) {
+    map.removeLayer(roadworksLayer)
+    return
+  }
+  roadworksLayer.addTo(map)
+
+  for (const r of roadworks.value) {
+    const color = KIND_COLORS[r.kind] ?? '#555'
+    const latlngs: [number, number][] = [
+      [r.start.lat, r.start.lng],
+      [r.end.lat, r.end.lng],
+    ]
+
+    // Biała obwódka pod linią, żeby ograniczenie było widoczne na tle korków
+    L.polyline(latlngs, { color: '#ffffff', weight: 13, opacity: 0.95, lineCap: 'round' }).addTo(roadworksLayer)
+    L.polyline(latlngs, {
+      color,
+      weight: 7,
+      opacity: 1,
+      dashArray: r.status === 'planned' ? '10 8' : undefined,
+      lineCap: 'round',
+    })
+      .bindPopup(roadworkPopupHtml(r))
+      .addTo(roadworksLayer)
+
+    const mid: [number, number] = [(r.start.lat + r.end.lat) / 2, (r.start.lng + r.end.lng) / 2]
+    const icon = L.divIcon({
+      className: 'roadwork-pin',
+      html: `<div class="roadwork-pin-box ${r.status === 'planned' ? 'is-planned' : ''}" style="border-color:${color}">${KIND_ICONS[r.kind] ?? '🚧'}</div>`,
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+    })
+    L.marker(mid, { icon, zIndexOffset: 1000 }).bindPopup(roadworkPopupHtml(r)).addTo(roadworksLayer)
+  }
+}
+
+const loadRoadworks = async () => {
+  try {
+    roadworks.value = await fetchRoadworks()
+    roadworksError.value = ''
+  } catch {
+    roadworksError.value = 'Nie udało się pobrać ograniczeń drogowych'
+    return
+  }
+  renderRoadworks()
+  // Ruch zależy od aktywnych ograniczeń, więc przeliczamy ulice po każdym odświeżeniu danych
+  renderStreets()
 }
 
 const renderKeyPoints = () => {
@@ -286,6 +412,14 @@ watch(currentHour, () => {
   renderStreets()
 })
 
+watch(showRoadworks, () => {
+  renderRoadworks()
+})
+
+watch(roadworksAffectTraffic, () => {
+  renderStreets()
+})
+
 watch(isLiveTomTomFlowActive, () => {
   updateTomTomLayers()
 })
@@ -296,9 +430,13 @@ watch(isLiveTomTomIncidentsActive, () => {
 
 onMounted(() => {
   initMap()
+  loadRoadworks()
+  // Odświeżanie ograniczeń co minutę (status planned -> active zmienia się w czasie)
+  roadworksTimer = window.setInterval(loadRoadworks, 60_000)
 })
 
 onUnmounted(() => {
+  if (roadworksTimer) window.clearInterval(roadworksTimer)
   if (map) {
     map.remove()
     map = null
@@ -351,6 +489,19 @@ onUnmounted(() => {
           {{ d }}
         </button>
       </div>
+
+      <!-- Roadworks toggles -->
+      <div class="roadworks-toggles">
+        <label class="toggle-row">
+          <input v-model="showRoadworks" type="checkbox" />
+          <span>🚧 Pokaż ograniczenia drogowe ({{ roadworks.length }})</span>
+        </label>
+        <label class="toggle-row">
+          <input v-model="roadworksAffectTraffic" type="checkbox" />
+          <span>Uwzględnij w natężeniu ruchu ({{ activeRoadworksCount() }} aktywnych)</span>
+        </label>
+        <span v-if="roadworksError" class="toggle-error">{{ roadworksError }}</span>
+      </div>
     </div>
 
     <!-- 2. Floating Top-Right Points Panel (Figma: "ℹ Ważne punkty -> ul. Rynek 1") -->
@@ -400,6 +551,9 @@ onUnmounted(() => {
         </div>
         <button class="close-btn" @click="activeStreetInfo = null">✕</button>
       </div>
+      <div v-if="activeStreetInfo.causes?.length" class="active-street-causes">
+        🚧 Wpływ ograniczeń: {{ activeStreetInfo.causes.join(', ') }}
+      </div>
       <div class="active-street-stats">
         <div class="stat-box">
           <span class="stat-label">Natężenie ruchu</span>
@@ -437,6 +591,7 @@ onUnmounted(() => {
           <span class="legend-item"><i class="dot dot-green"></i> Płynny (&lt;40%)</span>
           <span class="legend-item"><i class="dot dot-orange"></i> Umiarkowany (40-70%)</span>
           <span class="legend-item"><i class="dot dot-red"></i> Korek (&gt;70%)</span>
+          <span class="legend-item"><i class="dot dot-closure"></i> Ograniczenie</span>
         </div>
       </div>
 
@@ -906,6 +1061,40 @@ onUnmounted(() => {
 .dot-green { background: #37dd00; }
 .dot-orange { background: #f29a01; }
 .dot-red { background: #ec1f00; }
+.dot-closure { background: #7c3aed; }
+
+.roadworks-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background-color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  font-family: var(--font-family-body);
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.toggle-error {
+  color: #ec1f00;
+  font-size: 11px;
+}
+.active-street-causes {
+  background: #f5f3ff;
+  color: #5b21b6;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
 
 .slider-wrapper {
   display: flex;
@@ -1066,6 +1255,24 @@ onUnmounted(() => {
 </style>
 
 <style>
+/* Roadworks pins */
+.roadwork-pin-box {
+  width: 30px;
+  height: 30px;
+  background: #ffffff;
+  border: 3px solid #f59e0b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+.roadwork-pin-box.is-planned {
+  opacity: 0.75;
+  border-style: dashed;
+}
+
 /* Global Leaflet Custom Pin Styles */
 .custom-traffic-pin .pin-box {
   width: 32px;

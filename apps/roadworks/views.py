@@ -13,7 +13,7 @@ def serialize_restriction(road):
     return {
         "id": road.id,
         "title": road.title,
-        "king": road.type,
+        "kind": road.type,
         "kind_label": road.get_type_display(),
         "organization": road.organization,
         "description": road.description,
