@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "hackyeah-2026-ys2d.onrender.com",
-    "hackyeah-2026-1.onrender.com",
+    "hackyeah-2026-2.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
