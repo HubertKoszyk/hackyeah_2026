@@ -14,17 +14,41 @@ DEFAULT_TEST_URL = "https://www.worldcam.pl/liveview/36999"
 DEFAULT_OUT_DIR  = "."
 
 def _generate_filename(out_dir=DEFAULT_OUT_DIR):
-    """Return a path like ./worldcam_2026-10-03_14-52-07_482.png"""
+    """
+    Generate a timestamp-based filename for a captured WorldCam frame.
+
+    The filename contains the current date and time with millisecond
+    precision and is created inside the specified output directory.
+
+    Args:
+        out_dir (str): Directory where the generated file path should point.
+
+    Returns: str: Path to the generated PNG file.
+    """
+
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_%f")[:-3]
     return os.path.join(out_dir, f"worldcam_{ts}.png")
 
 
 def enter_player_context(driver, timeout=20):
+    """
+    Find and enter the browser context containing the video player.
+    The function first checks the current document for a <video> element.
+    If none is found, it searches through available iframes until a video
+    element is found or the timeout expires.
+
+    Args:
+        driver (webdriver.Chrome): Selenium WebDriver instance.
+        timeout (int): Maximum number of seconds to search for the video.
+
+    Returns: bool: True if a context containing a <video> element was found, otherwise False.
+    """
+
     driver.switch_to.default_content()
     if driver.find_elements(By.TAG_NAME, "video"):
         return True
 
-    print("-> Looking for iframe with the player ...")
+    #print("-> Looking for iframe with the player ...")
     end = time.time() + timeout
     while time.time() < end:
         driver.switch_to.default_content()
@@ -45,6 +69,20 @@ def enter_player_context(driver, timeout=20):
 
 
 def wait_for_stream(driver, timeout=60):
+    """
+    Wait until the video stream starts playing.
+    The function periodically checks the <video> element's ready state,
+    playback state, current playback time, and video dimensions.
+    The stream is considered ready when it has valid dimensions, is not
+    paused, and has played for more than 0.5 seconds.
+
+    Args:
+        driver (webdriver.Chrome): Selenium WebDriver instance.
+        timeout (int): Maximum number of seconds to wait for the stream.
+
+    Returns: bool: True if the stream started playing within the timeout, otherwise False.
+    """
+
     print(f"-> Waiting for stream (max {timeout}s) ...")
     end = time.time() + timeout
     while time.time() < end:
@@ -70,10 +108,19 @@ def wait_for_stream(driver, timeout=60):
 
 def grab_video_frame(driver, path):
     """
-    Save one <video> frame as PNG.
-    1) tries element.screenshot()  <- works even for cross-origin
-    2) fallback: canvas -> base64  <- works only for same-origin
+    Capture the current frame of the video and save it as a PNG image.
+    The function first attempts to use Selenium's element screenshot functionality.
+    If that fails, it attempts to draw the video onto a canvas and extract the image as a base64-encoded PNG.
+    The canvas method may fail when the video is served from another origin and the canvas
+    becomes security-tainted.
+
+    Args:
+        driver (webdriver.Chrome): Selenium WebDriver instance.
+        path (str): Destination path for the PNG image.
+
+    Returns: bool: True if a frame was successfully saved, otherwise False.
     """
+
     video = driver.find_element(By.TAG_NAME, "video")
 
     try:
@@ -120,25 +167,29 @@ def get_image(url,
               driver=None,
               quit_driver=True):
     """
-    Open a WorldCam live view page and save one frame from the stream.
+    Capture a single frame from a WorldCam live video stream.
+    The function opens the specified WorldCam page using
+    Selenium, handles the cookie dialog when present, locates the video player, waits for the
+    stream to start, and captures the current video frame.
+    The captured PNG is loaded into a NumPy array using OpenCV and the temporary PNG
+    file is then removed. If an existing Selenium WebDriver is provided, it is reused
+    instead of creating a new browser instance.
 
     Args:
-        url:          page URL (required) - e.g. "https://www.worldcam.pl/liveview/36999"
-        output_path:  full path for the PNG. If None, a timestamped name is
-                      generated automatically in 'out_dir'.
-        out_dir:      directory for auto-generated filenames (default: ".")
-        timeout:      max seconds to wait for the stream (default: 60)
-        headless:     run Chrome in headless mode (default: True)
-        window_size:  (width, height) of the browser window
-        driver:       optional already-created Selenium WebDriver.
-                      If provided, the function will NOT create a new one.
-        quit_driver:  if True, close the browser after the call.
-                      Ignored when 'driver' was passed in.
+        url (str): URL of the WorldCam live view page.
+        output_path (str | None): Path where the temporary PNG frame should be saved. If None, a timestamped path is generated.
+        out_dir (str): Directory used when generating an automatic output path.
+        timeout (int): Maximum number of seconds to wait for the stream.
+        headless (bool): Whether to run Chrome in headless mode when creating a new WebDriver.
+        window_size (tuple[int, int]): Browser window width and height.
+        driver (webdriver.Chrome | None): Optional existing Selenium WebDriver. If provided, a new driver is not created.
+        quit_driver (bool): Whether to close the browser after the operation when the driver was created by this function.
 
-    Returns:
-        str   absolute path to the saved PNG, or
-        None  on failure.
-    """
+        Returns: numpy.ndarray | None: Captured video frame as an OpenCV image array, or None if the frame
+        could not be captured.
+
+        Raises: ValueError: If the URL is empty or None.
+        """
     if not url:
         raise ValueError("url is required")
 
@@ -227,12 +278,3 @@ def get_image(url,
         if own_driver and quit_driver:
             driver.quit()
             print("-> Done.")
-
-
-if __name__ == "__main__":
-    result = get_image(DEFAULT_TEST_URL)
-    if result is not None:
-        print(f"OK -> shape {result.shape}")
-        sys.exit(0)
-    print("FAILED")
-    sys.exit(1)
