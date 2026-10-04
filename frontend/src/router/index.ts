@@ -20,11 +20,11 @@ const router = createRouter({
       name: 'parking',
       component: ParkingView,
     },
-    {
-      path: '/components',
-      name: 'components',
-      component: HomeView,
-    },
+//    {
+//      path: '/components',
+//      name: 'components',
+//      component: HomeView,
+//    },
     {
       path: '/about',
       name: 'about',

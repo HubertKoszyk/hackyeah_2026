@@ -15,7 +15,7 @@ const navItems: NavItem[] = [
   { id: 'home', label: 'Home', path: '/', icon: 'home' },
   { id: 'traffic', label: 'Traffic', path: '/traffic', icon: 'traffic' },
   { id: 'parking', label: 'Parking\nlots', path: '/parking', icon: 'parking' },
-  { id: 'components', label: 'Design\nSystem', path: '/components', icon: 'components' },
+//  { id: 'components', label: 'Design\nSystem', path: '/components', icon: 'components' },
 ]
 
 const isActive = (item: NavItem) => {
