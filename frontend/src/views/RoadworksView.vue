@@ -2,7 +2,7 @@
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { fetchRoadworks, createRoadwork, type RoadRestriction } from '../services/api'
+import { fetchRoadworks, createRoadwork, deleteRoadwork, type RoadRestriction } from '../services/api'
 
 const mapContainer = ref<HTMLElement | null>(null)
 const items = ref<RoadRestriction[]>([])
@@ -194,6 +194,38 @@ const save = async () => {
   }
 }
 
+const confirmTarget = ref<RoadRestriction | null>(null)
+const deleting = ref(false)
+const deleteError = ref('')
+
+const askDelete = (r: RoadRestriction) => {
+  confirmTarget.value = r
+  deleteError.value = ''
+}
+
+const cancelDelete = () => {
+  if (deleting.value) return
+  confirmTarget.value = null
+  deleteError.value = ''
+}
+
+const confirmDelete = async () => {
+  const target = confirmTarget.value
+  if (!target) return
+  deleting.value = true
+  deleteError.value = ''
+  try {
+    await deleteRoadwork(target.id)
+    confirmTarget.value = null
+    savedInfo.value = `Usunięto blokadę: ${target.title}`
+    await load()
+  } catch (e) {
+    deleteError.value = e instanceof Error ? e.message : 'Błąd usuwania'
+  } finally {
+    deleting.value = false
+  }
+}
+
 onMounted(() => {
   if (!mapContainer.value) return
   map = L.map(mapContainer.value, { center: [50.0617, 19.9373], zoom: 13 })
@@ -253,17 +285,20 @@ onUnmounted(() => {
       <p v-if="error" class="rw-error">{{ error }}</p>
       <p v-else-if="!items.length" class="rw-muted">Brak aktywnych i planowanych ograniczeń.</p>
 
-      <button v-for="r in items" :key="r.id" type="button" class="rw-item" @click="focusItem(r)">
-        <span class="rw-dot" :style="{ background: KIND_COLORS[r.kind] }"></span>
-        <span class="rw-text">
-          <b>{{ r.title }}</b>
-          <small>{{ r.kind_label }} · {{ statusLabel(r.status) }}</small>
-          <small>{{ fmt(r.start_at) }} – {{ fmt(r.end_at) }}</small>
-          <small v-if="r.conflicts.length" class="rw-warn">
-            ⚠ Kolizja: {{ r.conflicts.map((c) => c.title).join(', ') }}
-          </small>
-        </span>
-      </button>
+      <div v-for="r in items" :key="r.id" class="rw-item-row">
+        <button type="button" class="rw-item" @click="focusItem(r)">
+          <span class="rw-dot" :style="{ background: KIND_COLORS[r.kind] }"></span>
+          <span class="rw-text">
+            <b>{{ r.title }}</b>
+            <small>{{ r.kind_label }} · {{ statusLabel(r.status) }}</small>
+            <small>{{ fmt(r.start_at) }} – {{ fmt(r.end_at) }}</small>
+            <small v-if="r.conflicts.length" class="rw-warn">
+              ⚠ Kolizja: {{ r.conflicts.map((c) => c.title).join(', ') }}
+            </small>
+          </span>
+        </button>
+        <button type="button" class="rw-del" title="Usuń blokadę" @click="askDelete(r)">🗑</button>
+      </div>
 
       <div class="rw-legend">
         <span v-for="(color, kind) in KIND_COLORS" :key="kind">
@@ -272,6 +307,21 @@ onUnmounted(() => {
         <span class="rw-muted">linia przerywana = planowane</span>
       </div>
     </aside>
+    <div v-if="confirmTarget" class="rw-modal-backdrop" @click.self="cancelDelete">
+      <div class="rw-modal">
+        <h3>Usunąć blokadę?</h3>
+        <p>
+          Czy na pewno chcesz usunąć <b>{{ confirmTarget.title }}</b>? Tej operacji nie można cofnąć.
+        </p>
+        <p v-if="deleteError" class="rw-error">{{ deleteError }}</p>
+        <div class="rw-row">
+          <button type="button" class="rw-btn rw-btn-danger" :disabled="deleting" @click="confirmDelete">
+            {{ deleting ? 'Usuwanie…' : 'Tak, usuń' }}
+          </button>
+          <button type="button" class="rw-btn" :disabled="deleting" @click="cancelDelete">Anuluj</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -426,5 +476,52 @@ onUnmounted(() => {
   height: 10px;
   border-radius: 2px;
   margin-right: 4px;
+}
+
+.rw-item-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.rw-item-row .rw-item {
+  flex: 1;
+  width: auto;
+  margin-bottom: 0;
+}
+.rw-del {
+  border: 0;
+  background: #fee2e2;
+  border-radius: 8px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.rw-del:hover {
+  background: #fecaca;
+}
+.rw-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rw-modal {
+  background: #fff;
+  color: #111;
+  border-radius: 12px;
+  padding: 20px;
+  width: 340px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+.rw-modal h3 {
+  margin: 0 0 8px;
+}
+.rw-btn-danger {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
 }
 </style>

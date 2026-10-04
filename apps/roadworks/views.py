@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET, require_http_methods, require_POST
 from .models import RoadRestriction
 from .services import find_conflicts, nearby_parkings
 import json
@@ -103,3 +103,14 @@ def create_roadwork(request):
         **dates,
     )
     return JsonResponse(serialize_restriction(restriction), status=201)
+
+
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_roadwork(request, id):
+    try:
+        restriction = RoadRestriction.objects.get(id=id)
+    except RoadRestriction.DoesNotExist:
+        return JsonResponse({"errors": {"id": "Nie znaleziono blokady"}}, status=404)
+    restriction.delete()
+    return JsonResponse({"deleted": id})

@@ -69,3 +69,14 @@ export const createRoadwork = async (payload: CreateRoadworkPayload): Promise<Ro
     throw new Error('Nie udało się zapisać blokady (brak połączenia z API?)')
   }
 }
+
+export const deleteRoadwork = async (id: number): Promise<void> => {
+  try {
+    await api.delete(`/roadworks/${id}/delete/`)
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response?.data?.errors) {
+      throw new Error(Object.values(e.response.data.errors).join('; '))
+    }
+    throw new Error('Nie udało się usunąć blokady')
+  }
+}
