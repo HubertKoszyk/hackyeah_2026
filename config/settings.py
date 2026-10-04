@@ -26,8 +26,6 @@ SECRET_KEY = 'django-insecure-cp+aq56^t8ya0xn&&cx#y3*=7a(_zxehqmeez8q(2h4)tbkr8o
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "hackyeah-2026-ys2d.onrender.com",
-    "hackyeah-2026-2.onrender.com",
     ".trycloudflare.com",
     "localhost",
     "127.0.0.1",
