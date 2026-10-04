@@ -1,4 +1,3 @@
-```python
 from django.core.management.base import BaseCommand
 from apps.parking.models import Parking
 from apps.parking.service.parking_service import ParkingService
@@ -53,4 +52,3 @@ class Command(BaseCommand):
 
             print("--- Update finished ---")
             time.sleep(20)
-```
