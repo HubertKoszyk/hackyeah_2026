@@ -15,6 +15,7 @@ const navItems: NavItem[] = [
   { id: 'home', label: 'Home', path: '/', icon: 'home' },
   { id: 'traffic', label: 'Traffic', path: '/traffic', icon: 'traffic' },
   { id: 'parking', label: 'Parking\nlots', path: '/parking', icon: 'parking' },
+  { id: 'roadworks', label: 'Road\nworks', path: '/roadworks', icon: 'roadworks' },
 //  { id: 'components', label: 'Design\nSystem', path: '/components', icon: 'components' },
 ]
 
@@ -57,6 +58,13 @@ const navigate = (item: NavItem) => {
               stroke-width="1.8"
               stroke-linejoin="round"
             />
+          </svg>
+
+          <!-- Roadworks Icon -->
+          <svg v-else-if="item.icon === 'roadworks'" viewBox="0 0 24 24" fill="none" class="icon-svg">
+              <path d="M12 3L22 20H2L12 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+              <path d="M12 9V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <circle cx="12" cy="17" r="1" fill="currentColor" />
           </svg>
 
           <!-- Traffic Icon -->

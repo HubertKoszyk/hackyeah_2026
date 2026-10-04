@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.accounts',
     'apps.parking',
+    'apps.roadworks',
 ]
 
 REST_FRAMEWORK = {
@@ -136,6 +137,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-MODEL_PATH = BASE_DIR / "yolov8n.pt"
+MODEL_PATH = BASE_DIR / "yolov8m.pt"
 MODEL_CONFIDENCE = 0.25
 MODEL_IMAGE_SIZE = 640

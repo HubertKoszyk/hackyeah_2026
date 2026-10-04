@@ -19,3 +19,27 @@ export const fetchParkingSpots = async (): Promise<ParkingItem[]> => {
   const response = await api.get<ParkingItem[]>('/parking/get/all/')
   return response.data
 }
+
+export interface RoadRestriction {
+  id: number
+  title: string
+  kind: 'roadwork' | 'event' | 'accident' | 'closure'
+  kind_label: string
+  organization: string
+  description: string
+  detour: string
+  status: 'active' | 'planned' | 'finished'
+  start: { lat: number; lng: number }
+  end: { lat: number; lng: number }
+  start_at: string
+  end_at: string
+  conflicts: { id: number; title: string }[]
+  nearby_parkings: { id: number; name: string; distance_m: number }[]
+}
+
+export const fetchRoadworks = async (): Promise<RoadRestriction[]> => {
+  const response = await api.get<RoadRestriction[]>('/roadworks/', {
+    params: { hide_finished: 1 },
+  })
+  return response.data
+}
